@@ -8,7 +8,7 @@ from tensorflow.python.platform import gfile
 from tensorface.const import PRETREINED_MODEL_DIR
 from openvino.inference_engine import IENetwork, IECore
 
-MODEL_PATH = os.environ.get("MODEL_PATH")
+MODEL_PATH = '../lrmodels/facenet.xml'
 
 # to get Flask not complain
 global tf

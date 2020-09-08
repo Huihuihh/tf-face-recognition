@@ -7,7 +7,7 @@ from tensorflow.python.platform import gfile
 
 from tensorface.const import PRETREINED_MODEL_DIR
 
-MODEL_PATH = os.environ.get("MODEL_PATH")
+MODEL_PATH = '../models/facenet.pb'
 
 # to get Flask not complain
 global tf
@@ -28,7 +28,11 @@ def load_model(model, input_map=None):
             with gfile.FastGFile(model_exp,'rb') as f:
                 graph_def = _tf.GraphDef()
                 graph_def.ParseFromString(f.read())
-                _tf.import_graph_def(graph_def, input_map=input_map, name='')
+                saver = _tf.import_graph_def(graph_def, input_map=input_map, name='')
+                gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.8)
+                sess =tf.Session(config=tf.ConfigProto(gpu_options=gpu_options,log_device_placement=False))
+                sess.run(tf.global_variables_initializer())
+                sess.run(tf.local_variables_initializer())
         else:
             print('Model directory: %s' % model_exp)
             meta_file, ckpt_file = get_model_filenames(model_exp)
